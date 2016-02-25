@@ -18,13 +18,33 @@ angular.module('eliteApp', ['ionic'])
   $stateProvider
 
     .state('home', {
+      abstract: true,
       url: "/home",
       templateUrl: "app/home/home.html"
     })
+
+    .state('home.leagues', {
+      url: "/leagues",
+      views: {
+        "tab-leagues": {
+          templateUrl: "app/home/leagues.html"
+        }
+      }
+    })
+
+    .state('home.myteams', {
+      url: "/myteams",
+      views: {
+        "tab-myteams": {
+          templateUrl: "app/home/myteams.html"
+        }
+      }
+    })
+
     .state('app', {
       url: "/app",
       templateUrl: "app/layout/menu-layout.html"
     });
     // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app');
+  $urlRouterProvider.otherwise('/home/leagues');
 });
