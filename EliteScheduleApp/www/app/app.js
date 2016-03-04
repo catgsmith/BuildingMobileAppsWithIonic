@@ -1,4 +1,4 @@
-angular.module('eliteApp', ['ionic'])
+angular.module("eliteApp", ["ionic"])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -13,6 +13,7 @@ angular.module('eliteApp', ['ionic'])
     }
   });
 })
+
 .config(function($stateProvider, $urlRouterProvider) {
 
   $stateProvider
