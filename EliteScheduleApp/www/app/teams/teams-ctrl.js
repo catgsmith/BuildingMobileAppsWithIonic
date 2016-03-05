@@ -7,6 +7,8 @@
         var vm = this;
         
         var data = eliteApi.getLeagueData();
+        console.log(data);
         vm.teams = data.teams;
-    }
+
+    };
 })();

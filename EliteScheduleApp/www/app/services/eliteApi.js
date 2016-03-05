@@ -15,11 +15,11 @@
 
         function getLeagueData(){
             return leagueData;
-        }
+        };
 
         return {
             getLeagues: getLeagues,
             getLeagueData: getLeagueData
         };
-    }
+    };
 })();

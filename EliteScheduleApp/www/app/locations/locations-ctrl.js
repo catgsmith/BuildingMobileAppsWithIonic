@@ -9,5 +9,5 @@
         var data = eliteApi.getLeagueData();
         vm.locations = data.locations;
 
-    }
+    };
 })();

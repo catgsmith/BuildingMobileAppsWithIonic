@@ -10,5 +10,5 @@
 
         vm.standings = data.standings;
 
-    }
+    };
 })();
