@@ -1,27 +1,40 @@
 (function() {
     'use strict';
 
-    angular.module('eliteApp').factory('eliteApi', ['$http', eliteApi]);
+    angular.module('eliteApp').factory('eliteApi', ['$http', '$q', eliteApi]);
 
-    function eliteApi($http) {
+    function eliteApi($http, $q) {
+
+    	var currentLeagueId;
 
 
-        function getLeagues(callback) {
-            $http.get("http://elite-schedule.net/api/leaguedata")
+        function getLeagues() {
+            var deferred = $q.defer();
+
+            $http.get("/app/resource/league.json")
                 .success(function(data) {
-                    callback(data);
-                });
-        }
-
-        function getLeagueData(callback) {
-            $http.get("http://elite-schedule.net/api/leaguedata/" + currentLeagueId)
-                .success(function(data, status) {
-                    console.log("Received scehdule data via HTTP. ", data, status);
-                    callback(data);
+                    deferred.resolve(data);
                 })
                 .error(function() {
-                	console.log("Error while making HTTP call." );
+                    console.log("Error while making HTTP call.");
+                    deferred.reject();
                 });
+            return deferred.promise;
+        }
+
+        function getLeagueData() {
+            var deferred = $q.defer();
+
+            $http.get("/app/resource/leaguedata.json")
+                .success(function(data, status) {
+                    console.log("Received scehdule data via HTTP. ", data, status);
+                    deferred.resolve(data);
+                })
+                .error(function() {
+                    console.log("Error while making HTTP call.");
+                    deferred.reject();
+                });
+            return deferred.promise;
         }
 
         function setLeagueId(leagueId) {
