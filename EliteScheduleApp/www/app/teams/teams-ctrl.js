@@ -6,9 +6,11 @@
     function TeamsCtrl(eliteApi) {
         var vm = this;
         
-        var data = eliteApi.getLeagueData();
-        console.log(data);
-        vm.teams = data.teams;
+        var data = eliteApi.getLeagueData(function(data){
+            vm.teams = data.teams;
+        });
+        /*console.log(data);
+        vm.teams = data.teams;*/
 
-    };
+    }
 })();

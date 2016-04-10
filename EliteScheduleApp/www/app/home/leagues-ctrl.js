@@ -6,14 +6,17 @@
     function LeaguesCtrl($state, eliteApi) {
         var vm = this;
         
-        var data = eliteApi.getLeagues();
+        eliteApi.getLeagues(function(data){
+            vm.leagues = data;
+        });
 
-        console.log(data);
-        vm.leagues = data;
+       
+        //vm.leagues = data;
 
         vm.selectLeague = function(id){
+            eliteApi.setLeagueId(id);
             $state.go("app.teams");
-        }
+        };
 
-    };
+    }
 })();
