@@ -7,3 +7,7 @@ scss/
 ionic/
 resources/
 !*.json
+
+*.sublime-project
+
+*.sublime-workspace
