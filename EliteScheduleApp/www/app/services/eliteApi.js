@@ -1,24 +1,39 @@
 (function() {
     'use strict';
 
-    angular.module('eliteApp').factory('eliteApi', ['$http', '$q', '$ionicLoading', '$timeout', eliteApi]);
+    angular.module('eliteApp').factory('eliteApi', ['$http', '$q', '$ionicLoading', 'DSCacheFactory', eliteApi]);
 
-    function eliteApi($http, $q, $ionicLoading, $timeout) {
+    function eliteApi($http, $q, $ionicLoading, DSCacheFactory) {
 
         var currentLeagueId;
 
+        self.leaguesCache = DSCacheFactory.get("leaguesCache");
+        self.leagueDataCache = DSCacheFactory.get("leagueDataCache");
+
+
 
         function getLeagues() {
-            var deferred = $q.defer();
+            var deferred = $q.defer(),
+                cacheKey = "leagues",
+                leaguesData = self.leaguesCache.get(cacheKey);
 
-            $http.get("/app/resource/league.json")
-                .success(function(data) {
-                    deferred.resolve(data);
-                })
-                .error(function() {
-                    console.log("Error while making HTTP call.");
-                    deferred.reject();
-                });
+            if (leaguesData) {
+                console.log("Found data inside cache", leaguesData);
+                deferred.resolve(leaguesData);
+            } else {
+
+                $http.get("/app/resource/league.json")
+                    .success(function(data) {
+                        console.log("Received data via HTTP");
+                        self.leaguesCache.put(cacheKey, data);
+                        deferred.resolve(data);
+                    })
+                    .error(function() {
+                        console.log("Error while making HTTP call.");
+                        deferred.reject();
+                    });
+
+            }
             return deferred.promise;
         }
 
@@ -30,12 +45,8 @@
             $http.get("/app/resource/leaguedata.json")
                 .success(function(data, status) {
                     console.log("Received scehdule data via HTTP. ", data, status);
-
-                    $timeout(function(argument) {
-                        $ionicLoading.hide();
-                        deferred.resolve(data);
-                    }, 2000); // 2 second delay for testing purposes only
-
+                    $ionicLoading.hide();
+                    deferred.resolve(data);
                 })
                 .error(function() {
                     console.log("Error while making HTTP call.");
