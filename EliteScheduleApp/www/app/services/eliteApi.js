@@ -10,6 +10,18 @@
         self.leaguesCache = DSCacheFactory.get("leaguesCache");
         self.leagueDataCache = DSCacheFactory.get("leagueDataCache");
 
+        self.leaguesCache.setOptions({
+            // key value of the cache item if we need to restore to cache
+            onExpire: function (key, value) {
+                getLeagues()
+                    .then(function () {
+                        console.log("Leagues Cache was automatically refreshed.", new Date());
+                    }, function () {
+                        console.log("Error getting data. Putting expired item back in the cache.", new Date());
+                        self.leaguesCache.put(key, value);
+                    });
+            }
+        });
 
 
         function getLeagues() {
