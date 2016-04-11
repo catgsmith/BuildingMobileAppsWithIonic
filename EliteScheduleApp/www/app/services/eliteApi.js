@@ -38,21 +38,30 @@
         }
 
         function getLeagueData() {
-            var deferred = $q.defer();
+            var deferred = $q.defer(),
+                cacheKey = "leaguesData-" + currentLeagueId,
+                leagueData = self.leagueDataCache.get(cacheKey);
 
-            $ionicLoading.show({ template: 'Loading...' });
+            if (leagueData) {
+                console.log("Found League data in cache", leagueData);
+                deferred.resolve(leagueData);
+            } else {
 
-            $http.get("/app/resource/leaguedata.json")
-                .success(function(data, status) {
-                    console.log("Received scehdule data via HTTP. ", data, status);
-                    $ionicLoading.hide();
-                    deferred.resolve(data);
-                })
-                .error(function() {
-                    console.log("Error while making HTTP call.");
-                    $ionicLoading.hide();
-                    deferred.reject();
-                });
+                $ionicLoading.show({ template: 'Loading...' });
+
+                $http.get("/app/resource/leaguedata.json")
+                    .success(function(data, status) {
+                        console.log("Received scehdule data via HTTP. ", data, status);
+                        self.leagueDataCache.put(cacheKey, data);
+                        $ionicLoading.hide();
+                        deferred.resolve(data);
+                    })
+                    .error(function() {
+                        console.log("Error while making HTTP call.");
+                        $ionicLoading.hide();
+                        deferred.reject();
+                    });
+            }
             return deferred.promise;
         }
 
