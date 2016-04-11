@@ -5,8 +5,6 @@
 
     function eliteApi($http, $q, $ionicLoading, DSCacheFactory) {
 
-        var currentLeagueId;
-
         self.leaguesCache = DSCacheFactory.get("leaguesCache");
         self.leagueDataCache = DSCacheFactory.get("leagueDataCache");
 
@@ -22,6 +20,31 @@
                     });
             }
         });
+
+
+        self.leagueDataCache.setOptions({
+            onExpire: function (key, value) {
+                getLeagueData()
+                    .then(function () {
+                        console.log("League Data Cache was automatically refreshed.", new Date());
+                    }, function () {
+                        console.log("Error getting data. Putting expired item back in the cache.", new Date());
+                        self.leagueDataCache.put(key, value);
+                    });
+            }
+        });
+
+        self.staticCache = DSCacheFactory.get("staticCache");
+
+        function setLeagueId(leagueId){
+            self.staticCache.put("currentLeagueId", leagueId);
+        }
+
+        function getLeagueId(){
+            var id = self.staticCache.get("currentLeagueId");
+            console.log("in get leagueid", id);
+            return id;
+        }
 
 
         function getLeagues() {
@@ -51,7 +74,7 @@
 
         function getLeagueData() {
             var deferred = $q.defer(),
-                cacheKey = "leaguesData-" + currentLeagueId,
+                cacheKey = "leaguesData-" + getLeagueId(),
                 leagueData = self.leagueDataCache.get(cacheKey);
 
             if (leagueData) {
@@ -75,10 +98,6 @@
                     });
             }
             return deferred.promise;
-        }
-
-        function setLeagueId(leagueId) {
-            currentLeagueId = leagueId;
         }
 
         return {
