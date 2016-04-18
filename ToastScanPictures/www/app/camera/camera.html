@@ -1,0 +1,18 @@
+<ion-view title="Camera">
+    <ion-content class="has-header padding">
+        <div class="row">
+            <div class="col">
+                <button class="button  button-balanced" ng-click="takePicture()">Take Picture</button>
+            </div>
+            <div class="col">
+                <button class="button  button-balanced" ng-click="selectPicture()">Select Picture</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="item item-image">
+                <img ng-src="{{imgSrc}}" />
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
