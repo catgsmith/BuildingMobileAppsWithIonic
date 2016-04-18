@@ -1,0 +1,13 @@
+<ion-view title="Barcode Scanner">
+    <ion-content class="has-header padding">
+        <button class="button button-full button-balanced" ng-click="scan()">Scan</button>
+        <button class="button button-full button-stable" ng-click="reset()">Reset</button>
+
+        <div ng-show="vm.results">
+            <h2>Format: {{results.format}}</h2>
+            <h2>Text: {{results.text}}</h2>
+
+            <button class="button button-full button-energized" ng-click="lookup()">Lookup</button>
+        </div>
+    </ion-content>
+</ion-view>
